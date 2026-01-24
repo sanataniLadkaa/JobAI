@@ -1,0 +1,105 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "email": "recruiter@test.com",
+            "password": "password",
+            "role": "recruiter",
+            "name": "Alex Recruiter",
+            "skills": [],
+            "experience_years": 0
+        },
+        {
+            "id": 2,
+            "email": "sarah@test.com",
+            "password": "password",
+            "role": "candidate",
+            "name": "Sarah Dev",
+            "skills": [
+                "React",
+                "Node.js",
+                "Python"
+            ],
+            "experience_years": 3
+        }
+    ],
+    "jobs": [
+        {
+            "id": 1,
+            "title": "AI Engineeer",
+            "company": "Verbros",
+            "description": "Koi b aajao",
+            "required_skills": [
+                "ML",
+                "DL",
+                "NLP"
+            ],
+            "recruiter_id": 1
+        }
+    ],
+    "applications": [
+        {
+            "id": 1,
+            "candidate_id": 2,
+            "candidate_name": "Sarah Dev",
+            "job_id": 1,
+            "job_title": "AI Engineeer",
+            "status": "Rejected",
+            "applied_at": "2026-01-24T11:25:31.162649"
+        }
+    ],
+    "calls": [
+        {
+            "id": 1,
+            "recruiter_id": 1,
+            "candidate_id": 2,
+            "status": "Rescheduled (4 Hours Later)",
+            "scheduled_time": "2026-01-24T16:05:04.000602",
+            "retry_count": 1
+        }
+    ],
+    "sessions": [
+        {
+            "id": 2,
+            "user_id": 2,
+            "device_id": "dev_dbcpte0dq",
+            "token": "token_dev_dbcpte0dq",
+            "last_active": "2026-01-24T05:53:28.773413"
+        },
+        {
+            "id": 6,
+            "user_id": 2,
+            "device_id": "dev_g00tfwsar",
+            "token": "token_dev_g00tfwsar",
+            "last_active": "2026-01-24T06:01:58.323608"
+        },
+        {
+            "id": 7,
+            "user_id": 1,
+            "device_id": "dev_g00tfwsar",
+            "token": "token_dev_g00tfwsar",
+            "last_active": "2026-01-24T06:09:01.504658"
+        },
+        {
+            "id": 8,
+            "user_id": 1,
+            "device_id": "dev_g00tfwsar",
+            "token": "token_dev_g00tfwsar",
+            "last_active": "2026-01-24T06:24:50.163388"
+        },
+        {
+            "id": 9,
+            "user_id": 2,
+            "device_id": "dev_g00tfwsar",
+            "token": "token_dev_g00tfwsar",
+            "last_active": "2026-01-24T11:18:00.749356"
+        },
+        {
+            "id": 10,
+            "user_id": 1,
+            "device_id": "dev_g00tfwsar",
+            "token": "token_dev_g00tfwsar",
+            "last_active": "2026-01-24T11:18:06.458570"
+        }
+    ]
+}

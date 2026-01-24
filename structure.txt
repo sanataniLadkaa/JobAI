@@ -1,0 +1,26 @@
+/nexhire-project
+  ├── /backend
+  │   ├── main.py
+  │   ├── database.py
+  │   ├── models.py
+  │   ├── schemas.py
+  │   ├── services.py       # Contains AI RAG & Voice Logic
+  │   └── /routers
+  │       ├── auth.py
+  │       ├── jobs.py
+  │       └── candidates.py
+  │
+  └── /frontend
+      ├── package.json
+      ├── src/
+      │   ├── App.js
+      │   ├── api.js        # Axios configuration
+      │   ├── index.js
+      │   ├── /contexts
+      │   │   └── AuthContext.js
+      │   └── /components
+      │       ├── Login.js
+      │       ├── RecruiterDashboard.js
+      │       ├── CandidateSearch.js  # The AI Search Feature
+      │       └── VoiceScheduler.js  # The Voice Call Logic
+      └── public/
