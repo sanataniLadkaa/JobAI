@@ -2,104 +2,146 @@
     "users": [
         {
             "id": 1,
-            "email": "recruiter@test.com",
-            "password": "password",
+            "email": "alex@techcorp.com",
+            "password": "123",
             "role": "recruiter",
             "name": "Alex Recruiter",
             "skills": [],
             "experience_years": 0
         },
         {
+            "id": 3,
+            "email": "jane@fingroup.com",
+            "password": "123",
+            "role": "recruiter",
+            "name": "Jane HR",
+            "skills": [],
+            "experience_years": 0
+        },
+        {
             "id": 2,
-            "email": "sarah@test.com",
-            "password": "password",
+            "email": "sarah@dev.com",
+            "password": "123",
             "role": "candidate",
-            "name": "Sarah Dev",
+            "name": "Sarah Frontend",
             "skills": [
                 "React",
-                "Node.js",
-                "Python"
+                "CSS",
+                "Tailwind"
             ],
             "experience_years": 3
+        },
+        {
+            "id": 4,
+            "email": "mike@data.com",
+            "password": "123",
+            "role": "candidate",
+            "name": "Mike Backend",
+            "skills": [
+                "Python",
+                "SQL",
+                "Django"
+            ],
+            "experience_years": 5
+        },
+        {
+            "id": 5,
+            "email": "emily@design.com",
+            "password": "123",
+            "role": "candidate",
+            "name": "Emily Designer",
+            "skills": [
+                "Figma",
+                "UI/UX",
+                "Adobe XD"
+            ],
+            "experience_years": 2
         }
     ],
     "jobs": [
         {
-            "id": 1,
-            "title": "AI Engineeer",
-            "company": "Verbros",
-            "description": "Koi b aajao",
+            "id": 101,
+            "title": "Senior React Developer",
+            "company": "TechCorp",
+            "description": "Need an expert in React and Redux.",
             "required_skills": [
-                "ML",
-                "DL",
-                "NLP"
+                "React",
+                "Redux",
+                "Node"
             ],
             "recruiter_id": 1
+        },
+        {
+            "id": 102,
+            "title": "Python Data Scientist",
+            "company": "FinGroup",
+            "description": "Looking for strong Python and SQL skills.",
+            "required_skills": [
+                "Python",
+                "SQL",
+                "Machine Learning"
+            ],
+            "recruiter_id": 3
         }
     ],
     "applications": [
         {
-            "id": 1,
+            "id": 201,
             "candidate_id": 2,
-            "candidate_name": "Sarah Dev",
-            "job_id": 1,
-            "job_title": "AI Engineeer",
-            "status": "Rejected",
-            "applied_at": "2026-01-24T11:25:31.162649"
-        }
-    ],
-    "calls": [
+            "candidate_name": "Sarah Frontend",
+            "job_id": 101,
+            "job_title": "Senior React Developer",
+            "status": "Pending",
+            "applied_at": "2026-01-24T16:44:32.231952"
+        },
         {
-            "id": 1,
-            "recruiter_id": 1,
-            "candidate_id": 2,
-            "status": "Rescheduled (4 Hours Later)",
-            "scheduled_time": "2026-01-24T16:05:04.000602",
-            "retry_count": 1
+            "id": 202,
+            "candidate_id": 4,
+            "candidate_name": "Mike Backend",
+            "job_id": 101,
+            "job_title": "Senior React Developer",
+            "status": "Pending",
+            "applied_at": "2026-01-24T16:52:00.674281"
+        },
+        {
+            "id": 203,
+            "candidate_id": 3,
+            "candidate_name": "Jane HR",
+            "job_id": 101,
+            "job_title": "Senior React Developer",
+            "status": "Pending",
+            "applied_at": "2026-01-24T16:53:08.026903"
         }
     ],
+    "calls": [],
     "sessions": [
         {
+            "id": 1,
+            "user_id": 3,
+            "device_id": "dev_g00tfwsar",
+            "token": "token_dev_g00tfwsar",
+            "last_active": "2026-01-24T16:44:44.279705"
+        },
+        {
             "id": 2,
-            "user_id": 2,
-            "device_id": "dev_dbcpte0dq",
-            "token": "token_dev_dbcpte0dq",
-            "last_active": "2026-01-24T05:53:28.773413"
-        },
-        {
-            "id": 6,
-            "user_id": 2,
+            "user_id": 4,
             "device_id": "dev_g00tfwsar",
             "token": "token_dev_g00tfwsar",
-            "last_active": "2026-01-24T06:01:58.323608"
+            "last_active": "2026-01-24T16:51:28.395858"
         },
         {
-            "id": 7,
-            "user_id": 1,
+            "id": 3,
+            "user_id": 5,
             "device_id": "dev_g00tfwsar",
             "token": "token_dev_g00tfwsar",
-            "last_active": "2026-01-24T06:09:01.504658"
+            "last_active": "2026-01-24T16:52:50.179194"
         },
         {
-            "id": 8,
-            "user_id": 1,
+            "id": 4,
+            "user_id": 3,
             "device_id": "dev_g00tfwsar",
             "token": "token_dev_g00tfwsar",
-            "last_active": "2026-01-24T06:24:50.163388"
-        },
-        {
-            "id": 9,
-            "user_id": 2,
-            "device_id": "dev_g00tfwsar",
-            "token": "token_dev_g00tfwsar",
-            "last_active": "2026-01-24T11:18:00.749356"
-        },
-        {
-            "id": 10,
-            "user_id": 1,
-            "device_id": "dev_g00tfwsar",
-            "token": "token_dev_g00tfwsar",
-            "last_active": "2026-01-24T11:18:06.458570"
+            "last_active": "2026-01-24T16:53:37.628696"
         }
     ]
 }
