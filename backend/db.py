@@ -3,6 +3,20 @@ import os
 
 DATA_FILE = "data.json"
 
+import os
+from supabase import create_client, Client
+from dotenv import load_dotenv
+
+# Load .env file
+load_dotenv()
+
+# Initialize Supabase Client globally
+supabase: Client = create_client(
+    os.getenv("SUPABASE_URL"),
+    os.getenv("SUPABASE_KEY")
+)
+
+
 def load_db():
     """Loads the database from the local JSON file."""
     if not os.path.exists(DATA_FILE):

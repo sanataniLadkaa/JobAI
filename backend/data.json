@@ -142,6 +142,13 @@
             "device_id": "dev_g00tfwsar",
             "token": "token_dev_g00tfwsar",
             "last_active": "2026-01-24T16:53:37.628696"
+        },
+        {
+            "id": 5,
+            "user_id": 3,
+            "device_id": "dev_g00tfwsar",
+            "token": "token_dev_g00tfwsar",
+            "last_active": "2026-01-24T17:25:00.860238"
         }
     ]
 }

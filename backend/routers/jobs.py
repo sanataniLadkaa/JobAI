@@ -1,65 +1,63 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List
-from db import load_db, save_db, get_next_id
-from schemas import JobCreate, JobUpdate
+from db import supabase
 
 router = APIRouter()
+
+class JobCreate(BaseModel):
+    title: str
+    company: str
+    description: str
+    required_skills: List[str]
+
+class JobUpdate(BaseModel):
+    title: str
+    company: str
+    description: str
+    required_skills: List[str]
 
 # 1. Get All Jobs
 @router.get("/jobs")
 def get_jobs():
-    db = load_db()
-    return db["jobs"]
+    response = supabase.table("jobs").select("*").execute()
+    return response.data
 
 # 2. Create New Job
 @router.post("/jobs")
 def create_job(job_data: JobCreate):
-    db = load_db()
-    
-    # Create new job object
-    new_job = {
-        "id": get_next_id(db["jobs"]),
+    # Note: You would pass user_id from auth token here in real app
+    response = supabase.table("jobs").insert({
         "title": job_data.title,
         "company": job_data.company,
         "description": job_data.description,
         "required_skills": job_data.required_skills,
-        "recruiter_id": 1 # Mocked Recruiter ID (from token in real app)
-    }
-    
-    db["jobs"].append(new_job)
-    save_db(db)
-    return new_job
+        "recruiter_id": 1 # Mocked ID
+    }).execute()
+    return response.data[0]
 
 # 3. Update Job
 @router.put("/jobs/{job_id}")
 def update_job(job_id: int, job_data: JobUpdate):
-    db = load_db()
-    
-    # Find the job
-    job = next((j for j in db["jobs"] if j["id"] == job_id), None)
-    if not job:
+    check = supabase.table("jobs").select("*").eq("id", job_id).execute()
+    if not check.data:
         raise HTTPException(status_code=404, detail="Job not found")
     
-    # Update fields
-    job["title"] = job_data.title
-    job["company"] = job_data.company
-    job["description"] = job_data.description
-    job["required_skills"] = job_data.required_skills
+    supabase.table("jobs").update({
+        "title": job_data.title,
+        "company": job_data.company,
+        "description": job_data.description,
+        "required_skills": job_data.required_skills
+    }).eq("id", job_id).execute()
     
-    save_db(db)
-    return job
+    return {"message": "Job updated"}
 
 # 4. Delete Job
 @router.delete("/jobs/{job_id}")
 def delete_job(job_id: int):
-    db = load_db()
-    
-    # Find and remove
-    job_index = next((i for i, j in enumerate(db["jobs"]) if j["id"] == job_id), None)
-    if job_index is None:
+    check = supabase.table("jobs").select("*").eq("id", job_id).execute()
+    if not check.data:
         raise HTTPException(status_code=404, detail="Job not found")
         
-    del db["jobs"][job_index]
-    save_db(db)
+    supabase.table("jobs").delete().eq("id", job_id).execute()
     return {"message": "Job deleted successfully"}

@@ -1,56 +1,77 @@
 from fastapi import APIRouter, HTTPException, Header
 from pydantic import BaseModel
-from db import load_db
-from schemas import UserLogin
-from services import DeviceAuthService
 from typing import List
+from db import supabase  # Import the supabase client
+from schemas import UserLogin
+
 router = APIRouter()
 
-# 1. Login Endpoint (Shared by Recruiter & Candidate)
+# 1. Login Endpoint
 @router.post("/login")
 def login(credentials: UserLogin):
-    input_email = credentials.email.strip().lower().rstrip("`").rstrip("'")
+    # Old way: db = load_db()
+    # New way: Query Supabase
+    response = supabase.table("users").select("*").eq("email", credentials.email.strip().lower()).execute()
     
-    db = load_db()
-    
-    user = next(
-        (u for u in db["users"] if u["email"].strip().lower() == input_email), 
-        None
-    )
+    user = response.data[0] if response.data else None
     
     if not user or credentials.password != user["password"]:
         raise HTTPException(status_code=400, detail="Invalid credentials")
     
-    token = DeviceAuthService.handle_device_limit(user["id"], credentials.device_id)
+    # 2. Handle Session Device Logic (Now saving to Supabase)
+    # Check existing sessions
+    sess_response = supabase.table("sessions").select("*").eq("user_id", user["id"]).execute()
+    existing_sessions = sess_response.data
     
+    if len(existing_sessions) >= 3:
+        # Sort by last_active
+        existing_sessions.sort(key=lambda x: x["last_active"])
+        oldest = existing_sessions[0]
+        supabase.table("sessions").delete().eq("id", oldest["id"]).execute()
+    
+    # Create new session
+    token = f"token_{credentials.device_id}"
+    supabase.table("sessions").insert({
+        "user_id": user["id"],
+        "device_id": credentials.device_id,
+        "token": token,
+        "last_active": "now()" # Supabase handles 'now'
+    }).execute()
+    
+    # Remove password
     user_response = {k: v for k, v in user.items() if k != "password"}
     
     return {"access_token": token, "token_type": "bearer", "user": user_response}
 
-# 2. Get Current User Endpoint (For Refresh)
+# 2. Get Current User Endpoint
 @router.get("/me")
 def get_current_user(authorization: str = Header(None)):
     if not authorization:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
     token = authorization.replace("Bearer ", "")
-    db = load_db()
     
-    session = next((s for s in db["sessions"] if s["token"] == token), None)
+    # Find session in Supabase
+    sess_response = supabase.table("sessions").select("*").eq("token", token).execute()
+    session = sess_response.data[0] if sess_response.data else None
+    
     if not session:
         raise HTTPException(status_code=401, detail="Invalid token")
     
-    user = next((u for u in db["users"] if u["id"] == session["user_id"]), None)
+    # Find User
+    user_response = supabase.table("users").select("*").eq("id", session["user_id"]).execute()
+    user = user_response.data[0] if user_response.data else None
+    
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    user_response = {k: v for k, v in user.items() if k != "password"}
-    return user_response
+    user_clean = {k: v for k, v in user.items() if k != "password"}
+    return user_clean
 
-
+# 3. Update Profile Endpoint
 class UserUpdate(BaseModel):
     name: str
-    skills: List[str] # Expects array like ["React", "Node"]
+    skills: List[str]
     experience_years: int
 
 @router.put("/profile")
@@ -59,26 +80,17 @@ def update_profile(data: UserUpdate, authorization: str = Header(None)):
         raise HTTPException(status_code=401, detail="Not authenticated")
 
     token = authorization.replace("Bearer ", "")
-    db = load_db()
+    sess_response = supabase.table("sessions").select("*").eq("token", token).execute()
+    session = sess_response.data[0] if sess_response.data else None
     
-    # 1. Validate Token
-    session = next((s for s in db["sessions"] if s["token"] == token), None)
     if not session:
         raise HTTPException(status_code=401, detail="Invalid token")
     
-    # 2. Find User
-    user_index = next((i for i, u in enumerate(db["users"]) if u["id"] == session["user_id"]), None)
-    if user_index is None:
-        raise HTTPException(status_code=404, detail="User not found")
+    # Update User in Supabase
+    supabase.table("users").update({
+        "name": data.name,
+        "skills": data.skills,
+        "experience_years": data.experience_years
+    }).eq("id", session["user_id"]).execute()
     
-    # 3. Update Data
-    db["users"][user_index]["name"] = data.name
-    db["users"][user_index]["skills"] = data.skills
-    db["users"][user_index]["experience_years"] = data.experience_years
-    
-    # 4. Save
-    save_db(db)
-    
-    # 5. Return Updated User (without password)
-    user_response = {k: v for k, v in db["users"][user_index].items() if k != "password"}
-    return {"message": "Profile updated", "user": user_response}
+    return {"message": "Profile updated"}
