@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Header
+from fastapi import APIRouter, HTTPException, Header,Query
 from pydantic import BaseModel
 from db import supabase
 from datetime import datetime
@@ -40,18 +40,22 @@ def get_applications():
 class StatusUpdate(BaseModel):
     status: str
 
-@router.put("/applications/{app_id}/status")
-def update_status(app_id: int, data: StatusUpdate):
-    # Check if exists
-    check = supabase.table("applications").select("*").eq("id", app_id).execute()
-    if not check.data:
-        raise HTTPException(status_code=404, detail="Application not found")
+# Replace get_applications function
+@router.get("/applications")
+def get_applications(status: str = Query(None)): # <--- NEW: Filter by status
+    db = supabase.table("applications").select("*, users!inner(name, skills)").execute() # Join with users to get skills
     
-    supabase.table("applications").update({
-        "status": data.status
-    }).eq("id", app_id).execute()
+    # Filter logic in Python (easier for simple MVP)
+    apps = db.data
     
-    return {"message": "Status updated"}
+    if status:
+        apps = [a for a in apps if a.get("status") == status]
+    else:
+        # If no status, return only Shortlisted for this specific page? 
+        # No, let's default to Shortlisted for the new page
+        apps = [a for a in apps if a.get("status") == "Shortlisted"]
+        
+    return sorted(apps, key=lambda x: x["applied_at"], reverse=True)
 
 # 4. Get My Applications (Candidate)
 @router.get("/applications/mine")
