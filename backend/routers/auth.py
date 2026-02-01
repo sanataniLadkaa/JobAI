@@ -1,44 +1,44 @@
 from fastapi import APIRouter, HTTPException, Header
 from pydantic import BaseModel
 from typing import List
-from db import supabase  # Import the supabase client
+from db import supabase
 from schemas import UserLogin
 
 router = APIRouter()
 
-# 1. Login Endpoint
+# 1. Login Endpoint (PERMANENT FIX)
 @router.post("/login")
 def login(credentials: UserLogin):
-    # Old way: db = load_db()
-    # New way: Query Supabase
+    # 1. Find User
     response = supabase.table("users").select("*").eq("email", credentials.email.strip().lower()).execute()
-    
     user = response.data[0] if response.data else None
     
     if not user or credentials.password != user["password"]:
         raise HTTPException(status_code=400, detail="Invalid credentials")
     
-    # 2. Handle Session Device Logic (Now saving to Supabase)
-    # Check existing sessions
-    sess_response = supabase.table("sessions").select("*").eq("user_id", user["id"]).execute()
-    existing_sessions = sess_response.data
+    # 2. Define Token
+    token = f"token_{credentials.device_id}"
     
-    if len(existing_sessions) >= 3:
-        # Sort by last_active
-        existing_sessions.sort(key=lambda x: x["last_active"])
-        oldest = existing_sessions[0]
+    # 3. Check Device Limit (Max 3) Before Upsert
+    sess_response = supabase.table("sessions").select("*").eq("user_id", user["id"]).execute()
+    all_sessions = sess_response.data
+    
+    if len(all_sessions) >= 3:
+        # Sort by last_active (oldest first)
+        all_sessions.sort(key=lambda x: x.get("last_active", ""))
+        oldest = all_sessions[0]
         supabase.table("sessions").delete().eq("id", oldest["id"]).execute()
     
-    # Create new session
-    token = f"token_{credentials.device_id}"
-    supabase.table("sessions").insert({
+    # 4. Upsert (Insert OR Update)
+    # This automatically handles if the token already exists (fixes your error permanently)
+    supabase.table("sessions").upsert({
         "user_id": user["id"],
         "device_id": credentials.device_id,
         "token": token,
-        "last_active": "now()" # Supabase handles 'now'
-    }).execute()
+        "last_active": "now()" # Supabase standard 'now'
+    }, on_conflict="token").execute() # If token exists, just update last_active
     
-    # Remove password
+    # Remove password before returning
     user_response = {k: v for k, v in user.items() if k != "password"}
     
     return {"access_token": token, "token_type": "bearer", "user": user_response}
@@ -50,15 +50,12 @@ def get_current_user(authorization: str = Header(None)):
         raise HTTPException(status_code=401, detail="Not authenticated")
 
     token = authorization.replace("Bearer ", "")
-    
-    # Find session in Supabase
     sess_response = supabase.table("sessions").select("*").eq("token", token).execute()
     session = sess_response.data[0] if sess_response.data else None
     
     if not session:
         raise HTTPException(status_code=401, detail="Invalid token")
     
-    # Find User
     user_response = supabase.table("users").select("*").eq("id", session["user_id"]).execute()
     user = user_response.data[0] if user_response.data else None
     
