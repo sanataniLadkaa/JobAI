@@ -5,7 +5,7 @@ const CandidateSearch = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [, setMessage] = useState('');
 
   // 1. AI Search Function
   const handleSearch = async () => {
