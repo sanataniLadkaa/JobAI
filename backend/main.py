@@ -7,7 +7,7 @@ app = FastAPI(title="NexHire API")
 # 3. Add the CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React's default port
+    allow_origins=["http://localhost:3000","https://jobai-eight.vercel.app"],  # React's default port
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods (GET, POST, PUT, DELETE, OPTIONS)
     allow_headers=["*"],  # Allows all headers
