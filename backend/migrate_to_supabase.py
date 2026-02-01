@@ -5,8 +5,6 @@ from datetime import datetime, timezone
 
 # --- CONFIGURATION ---
 # Go to Supabase Settings -> API -> Find "Project URL" and "Anon Public Key"
-SUPABASE_URL = "https://doqretjyiordttsnkjld.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvcXJldGp5aW9yZHR0c25ramxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjk2MzIsImV4cCI6MjA4NDg0NTYzMn0.gEJdm6-pb-KApIVWQD5OZXS3xtGkpi-1e16GMTDrbx4" 
 
 
 
