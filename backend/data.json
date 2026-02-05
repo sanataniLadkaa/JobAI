@@ -56,6 +56,72 @@
                 "Adobe XD"
             ],
             "experience_years": 2
+        },
+        {
+            "id": 6,
+            "email": "david@fullstack.com",
+            "password": "123",
+            "role": "candidate",
+            "name": "David Fullstack",
+            "skills": [
+                "React",
+                "Node",
+                "PostgreSQL"
+            ],
+            "experience_years": 4
+        },
+        {
+            "id": 7,
+            "email": "lisa@ai.com",
+            "password": "123",
+            "role": "candidate",
+            "name": "Lisa AI",
+            "skills": [
+                "Python",
+                "TensorFlow",
+                "PyTorch"
+            ],
+            "experience_years": 6
+        },
+        {
+            "id": 8,
+            "email": "mark@mobile.com",
+            "password": "123",
+            "role": "candidate",
+            "name": "Mark Mobile",
+            "skills": [
+                "React Native",
+                "Swift",
+                "Java"
+            ],
+            "experience_years": 5
+        },
+        {
+            "id": 9,
+            "email": "jane@web.com",
+            "password": "123",
+            "role": "candidate",
+            "name": "Jane Web",
+            "skills": [
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "Angular"
+            ],
+            "experience_years": 2
+        },
+        {
+            "id": 10,
+            "email": "tom@devops.com",
+            "password": "123",
+            "role": "candidate",
+            "name": "Tom DevOps",
+            "skills": [
+                "Docker",
+                "Kubernetes",
+                "AWS"
+            ],
+            "experience_years": 7
         }
     ],
     "jobs": [
@@ -92,63 +158,9 @@
             "job_id": 101,
             "job_title": "Senior React Developer",
             "status": "Pending",
-            "applied_at": "2026-01-24T16:44:32.231952"
-        },
-        {
-            "id": 202,
-            "candidate_id": 4,
-            "candidate_name": "Mike Backend",
-            "job_id": 101,
-            "job_title": "Senior React Developer",
-            "status": "Pending",
-            "applied_at": "2026-01-24T16:52:00.674281"
-        },
-        {
-            "id": 203,
-            "candidate_id": 3,
-            "candidate_name": "Jane HR",
-            "job_id": 101,
-            "job_title": "Senior React Developer",
-            "status": "Pending",
-            "applied_at": "2026-01-24T16:53:08.026903"
+            "applied_at": "2026-02-03T17:09:36.980213"
         }
     ],
     "calls": [],
-    "sessions": [
-        {
-            "id": 1,
-            "user_id": 3,
-            "device_id": "dev_g00tfwsar",
-            "token": "token_dev_g00tfwsar",
-            "last_active": "2026-01-24T16:44:44.279705"
-        },
-        {
-            "id": 2,
-            "user_id": 4,
-            "device_id": "dev_g00tfwsar",
-            "token": "token_dev_g00tfwsar",
-            "last_active": "2026-01-24T16:51:28.395858"
-        },
-        {
-            "id": 3,
-            "user_id": 5,
-            "device_id": "dev_g00tfwsar",
-            "token": "token_dev_g00tfwsar",
-            "last_active": "2026-01-24T16:52:50.179194"
-        },
-        {
-            "id": 4,
-            "user_id": 3,
-            "device_id": "dev_g00tfwsar",
-            "token": "token_dev_g00tfwsar",
-            "last_active": "2026-01-24T16:53:37.628696"
-        },
-        {
-            "id": 5,
-            "user_id": 3,
-            "device_id": "dev_g00tfwsar",
-            "token": "token_dev_g00tfwsar",
-            "last_active": "2026-01-24T17:25:00.860238"
-        }
-    ]
+    "sessions": []
 }
