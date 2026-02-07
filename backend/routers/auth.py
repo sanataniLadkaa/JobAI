@@ -6,6 +6,52 @@ from schemas import UserLogin
 
 router = APIRouter()
 
+# Add this Pydantic model near UserLogin
+class UserSignup(BaseModel):
+    name: str
+    email: str
+    password: str
+    role: str # "recruiter" or "candidate"
+
+@router.post("/signup")
+def signup(data: UserSignup):
+    db = supabase.table("users").select("*").eq("email", data.email.strip().lower()).execute()
+    
+    if db.data:
+        raise HTTPException(status_code=400, detail="Email already exists")
+    
+    # Create new user dictionary
+    new_user = {
+        "name": data.name,
+        "email": data.email.strip().lower(),
+        "password": data.password,
+        "role": data.role,
+        "skills": [],
+        "experience_years": 0
+    }
+
+    # CRITICAL FIX: Remove 'id' if it exists, to let DB auto-generate it
+    # This prevents the "duplicate key value violates unique constraint users_pkey" error
+    new_user.pop('id', None) 
+    
+    # Insert into Supabase
+    insert_res = supabase.table("users").insert(new_user).execute()
+    user = insert_res.data[0]
+    
+    # Auto-Login: Create Session
+    token = f"token_dev_{hash(data.email)}"
+    supabase.table("sessions").upsert({
+        "user_id": user["id"],
+        "device_id": "signup_device", 
+        "token": token,
+        "last_active": "now()"
+    }, on_conflict="token").execute()
+    
+    # Remove password before returning
+    user_response = {k: v for k, v in user.items() if k != "password"}
+    
+    return {"access_token": token, "token_type": "bearer", "user": user_response}
+
 # 1. Login Endpoint (PERMANENT FIX)
 @router.post("/login")
 def login(credentials: UserLogin):

@@ -13,6 +13,7 @@ import EditProfile from './components/EditProfile';
 import ShortlistedCandidates from './components/ShortlistedCandidates';
 import ScheduledInterviews from './components/ScheduledInterviews';
 import SalaryEstimator from './components/SalaryEstimator';
+import Signup from './components/Signup'; // <--- IMPORT
 
 // Private Route Component
 const PrivateRoute = ({ children }) => {
@@ -96,6 +97,8 @@ function App() {
           } />
           {/* Default / Root Route */}
           <Route path="/" element={<RoleBasedRedirect />} />
+
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </Router>
     </AuthProvider>
