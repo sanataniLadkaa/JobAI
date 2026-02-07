@@ -89,6 +89,19 @@ const RecruiterDashboard = () => {
     fontSize: '0.9em'
   };
 
+  // FIX: Style for placeholder links (Buttons behaving as links to fix ESLint error)
+  const linkButtonStyle = {
+    background: 'none',
+    border: 'none',
+    color: '#d1d5db',
+    cursor: 'pointer',
+    padding: 0,
+    fontSize: 'inherit',
+    fontFamily: 'inherit',
+    textDecoration: 'none',
+    transition: 'color 0.2s'
+  };
+
   const handleHover = (e, isHovering) => {
     e.currentTarget.style.transform = isHovering ? 'translateY(-8px)' : 'translateY(0)'; // Higher lift
     e.currentTarget.style.boxShadow = isHovering ? '0 20px 25px -5px rgba(0, 0, 0, 0.1)' : '0 4px 6px -1px rgba(0, 0, 0, 0.05)';
@@ -134,10 +147,10 @@ const RecruiterDashboard = () => {
       <div style={heroStyle}>
         <div style={{ maxWidth: '600px' }}>
           <h1 style={{ margin: '0 0 15px 0', fontSize: '2.5rem', fontWeight: '800' }}>
-            Welcome, {user.name.split(' ')[0]}! 👋
+            Welcome back, {user.name.split(' ')[0]}! 👋
           </h1>
           <p style={{ margin: 0, fontSize: '1.2rem', opacity: 0.95, lineHeight: '1.6' }}>
-            Welcome to the next generation of recruiting. Manage your pipeline, automate screening, and hire the best talent faster with NexHire AI.
+            Welcome to the next generation of recruiting. Manage your job postings, track applications, and find the best talent using AI.
           </p>
         </div>
         <div style={{
@@ -163,17 +176,17 @@ const RecruiterDashboard = () => {
               </div>
               <h3 style={{ margin: '0 0 10px 0', color: '#111827', fontSize: '1.3rem' }}>AI Search</h3>
               <p style={{ margin: 0, color: '#6b7280', fontSize: '1rem', lineHeight: '1.6' }}>
-                Find candidates using RAG search and semantic matching.
+                Search & Rank candidates using RAG and NLP.
               </p>
             </div>
-            <div style={{ marginTop: '25px', color: '#4f46e5', fontWeight: '700', fontSize: '0.9em' }}>Find Talent &rarr;</div>
+            <div style={{ marginTop: '25px', color: '#4f46e5', fontWeight: '700', fontSize: '0.9em' }}>Search &rarr;</div>
           </div>
 
           {/* Card 2: Applications */}
           <div style={cardStyle} onClick={() => navigate('/view-applications')} onMouseEnter={(e) => handleHover(e, true)} onMouseLeave={(e) => handleHover(e, false)}>
             <div>
               <div style={{ width: '50px', height: '50px', borderRadius: '10px', background: '#f0fdf4', color: '#059669', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px' }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12 13 2 6"></polyline></svg>
               </div>
               <h3 style={{ margin: '0 0 10px 0', color: '#111827', fontSize: '1.3rem' }}>Applications</h3>
               <p style={{ margin: 0, color: '#6b7280', fontSize: '1rem', lineHeight: '1.6' }}>
@@ -191,10 +204,10 @@ const RecruiterDashboard = () => {
               </div>
               <h3 style={{ margin: '0 0 10px 0', color: '#111827', fontSize: '1.3rem' }}>Shortlisted</h3>
               <p style={{ margin: 0, color: '#6b7280', fontSize: '1rem', lineHeight: '1.6' }}>
-                Schedule interviews and give feedback to top candidates.
+                Schedule interviews and provide feedback for top picks.
               </p>
             </div>
-            <div style={{ marginTop: '25px', color: '#ea580c', fontWeight: '700', fontSize: '0.9em' }}>Interviews &rarr;</div>
+            <div style={{ marginTop: '25px', color: '#ea580c', fontWeight: '700', fontSize: '0.9em' }}>Process &rarr;</div>
           </div>
 
         </div>
@@ -231,7 +244,7 @@ const RecruiterDashboard = () => {
                 Create, edit, or delete job postings in seconds.
               </p>
             </div>
-            <div style={{ marginTop: '25px', color: '#db2777', fontWeight: '700', fontSize: '0.9em' }}>Edit Jobs &rarr;</div>
+            <div style={{ marginTop: '25px', color: '#db2777', fontWeight: '700', fontSize: '0.9em' }}>Manage &rarr;</div>
           </div>
 
           {/* Card 5: Scheduled */}
@@ -256,7 +269,7 @@ const RecruiterDashboard = () => {
               </div>
               <h3 style={{ margin: '0 0 10px 0', color: '#111827', fontSize: '1.3rem' }}>Call Logs</h3>
               <p style={{ margin: 0, color: '#6b7280', fontSize: '1rem', lineHeight: '1.6' }}>
-                Track automated voice outreach history and logs.
+                Track automated voice outreach and history.
               </p>
             </div>
             <div style={{ marginTop: '25px', color: '#0891b2', fontWeight: '700', fontSize: '0.9em' }}>History &rarr;</div>
@@ -273,10 +286,19 @@ const RecruiterDashboard = () => {
             <p style={{ margin: 0, fontSize: '0.85em' }}>Empowering Recruitment with AI.</p>
           </div>
           <div style={{ display: 'flex', gap: '30px' }}>
-            <a href="#" style={{ color: '#d1d5db', textDecoration: 'none', hoverColor: 'white' }}>About Us</a>
-            <a href="#" style={{ color: '#d1d5db', textDecoration: 'none' }}>Privacy Policy</a>
-            <a href="#" style={{ color: '#d1d5db', textDecoration: 'none' }}>Terms of Service</a>
-            <a href="#" style={{ color: '#d1d5db', textDecoration: 'none' }}>Contact Support</a>
+            {/* CHANGED TO BUTTONS TO FIX ESLINT WARNING */}
+            <button style={linkButtonStyle} type="button" onMouseEnter={(e) => e.target.style.color = 'white'} onMouseLeave={(e) => e.target.style.color = '#d1d5db'}>
+              About Us
+            </button>
+            <button style={linkButtonStyle} type="button" onMouseEnter={(e) => e.target.style.color = 'white'} onMouseLeave={(e) => e.target.style.color = '#d1d5db'}>
+              Privacy Policy
+            </button>
+            <button style={linkButtonStyle} type="button" onMouseEnter={(e) => e.target.style.color = 'white'} onMouseLeave={(e) => e.target.style.color = '#d1d5db'}>
+              Terms of Service
+            </button>
+            <button style={linkButtonStyle} type="button" onMouseEnter={(e) => e.target.style.color = 'white'} onMouseLeave={(e) => e.target.style.color = '#d1d5db'}>
+              Contact Support
+            </button>
           </div>
         </div>
         <div style={{ textAlign: 'center', marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #374151', fontSize: '0.8em' }}>

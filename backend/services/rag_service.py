@@ -159,39 +159,61 @@ class RagService:
         return True
 
     def search_and_summarize(self, query):
-        if not self.index or self.index.ntotal == 0:
-            return "No resumes indexed yet. Please upload resumes first."
+        if self.index.ntotal == 0:
+            return "No resumes indexed yet."
 
+        # 1. Retrieve Top Chunks (FAISS)
         formatted_query = "query: " + query
         query_vec = embed_model.encode([formatted_query], convert_to_numpy=True)
         
-        D, I = self.index.search(np.array(query_vec), k=20)
-        candidate_chunks = []
+        D, I = self.index.search(np.array(query_vec), k=25) # Retrieve more to get coverage
 
+        # 2. GROUP BY USER ID (The Fix)
+        # This ensures we don't list the same person multiple times
+        candidates_map = {} 
+        
         for idx in I[0]:
             if idx < len(self.chunks_metadata):
-                candidate_chunks.append(self.chunks_metadata[idx]["text"])
+                meta = self.chunks_metadata[idx]
+                uid = meta["user_id"]
+                
+                if uid not in candidates_map:
+                    candidates_map[uid] = {
+                        "name": meta["name"],
+                        "chunks": []
+                    }
+                # Add the chunk text to this candidate's list
+                candidates_map[uid]["chunks"].append(meta["text"])
 
-        if not candidate_chunks: return "No relevant chunks found."
-
-        # Rerank
-        pairs = [[query, chunk] for chunk in candidate_chunks]
-        scores = reranker.predict(pairs)
-        ranked = sorted(zip(candidate_chunks, scores), key=lambda x: x[1], reverse=True)
-        top_chunks = [chunk for chunk, _ in ranked[:5]]
-
-        # Summarize
-        context = "\n\n".join([f"- {c}" for c in top_chunks])
+        # 3. Prepare Context for LLM
+        # We iterate through the grouped candidates
+        context_parts = []
         
-        if not GOOGLE_API_KEY:
-            return "Top 5 chunks retrieved (Summary unavailable without API Key)."
+        for uid, data in candidates_map.items():
+            # Join chunks, limit text length to save tokens (e.g., 1500 chars per candidate)
+            combined_text = " ".join(data["chunks"])[:2000] 
+            context_parts.append(f"Candidate: {data['name']}\nRelevant Experience: {combined_text}")
 
+        if not context_parts:
+            return "No relevant candidates found."
+
+        context = "\n\n---\n\n".join(context_parts)
+        
+        # 4. Generate Summary with Gemini
+        # Updated prompt to match the new grouped structure
         prompt = f"""
         You are a helpful assistant for a recruiter. 
-        Based on the resume snippets below, provide a concise summary of the top 5 candidates suitable for this query: "{query}".
-        Format: 
-        1. [Name/ID] - [Key Skill 1], [Key Skill 2] - [Summary]
-        Resume Snippets:
+        Below is a list of the most relevant candidates for the query: "{query}".
+        
+        Note: The data below is grouped by Candidate. Each candidate may appear once.
+        
+        Based on the information, provide a concise summary of the top candidates.
+        
+        Format (Markdown Table):
+        | # | Candidate Name | Key Skill 1 | Key Skill 2 | Summary |
+        |---|---|---|---|---|
+        
+        Candidate Data:
         {context}
         """
 

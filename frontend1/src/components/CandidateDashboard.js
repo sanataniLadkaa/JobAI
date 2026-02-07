@@ -36,7 +36,7 @@ const CandidateDashboard = () => {
   };
 
   const heroStyle = {
-    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', // Green Gradient for Candidate/Growth
+    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
     margin: '40px 60px 60px 60px',
     padding: '50px', 
     borderRadius: '16px',
@@ -54,7 +54,7 @@ const CandidateDashboard = () => {
   const gridStyle = {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', 
-    gap: '60px', // <--- CARDS FAR AWAY
+    gap: '60px', 
     marginBottom: '80px' 
   };
 
@@ -87,6 +87,19 @@ const CandidateDashboard = () => {
     color: '#9ca3af',
     padding: '40px 60px',
     fontSize: '0.9em'
+  };
+
+  // FIX: Style for placeholder links (Buttons behaving as links)
+  const linkButtonStyle = {
+    background: 'none',
+    border: 'none',
+    color: '#d1d5db',
+    cursor: 'pointer',
+    padding: 0,
+    fontSize: 'inherit',
+    fontFamily: 'inherit',
+    textDecoration: 'none', // 'none' matches your original design, remove if you want underline
+    transition: 'color 0.2s'
   };
 
   const handleHover = (e, isHovering) => {
@@ -244,10 +257,19 @@ const CandidateDashboard = () => {
             <p style={{ margin: 0, fontSize: '0.85em' }}>Empowering Recruitment with AI.</p>
           </div>
           <div style={{ display: 'flex', gap: '30px' }}>
-            <a href="#" style={{ color: '#d1d5db', textDecoration: 'none', hoverColor: 'white' }}>About Us</a>
-            <a href="#" style={{ color: '#d1d5db', textDecoration: 'none' }}>Privacy Policy</a>
-            <a href="#" style={{ color: '#d1d5db', textDecoration: 'none' }}>Terms of Service</a>
-            <a href="#" style={{ color: '#d1d5db', textDecoration: 'none' }}>Contact Support</a>
+            {/* CHANGED TO BUTTONS TO FIX ESLINT WARNING */}
+            <button style={linkButtonStyle} type="button" onMouseEnter={(e) => e.target.style.color = 'white'} onMouseLeave={(e) => e.target.style.color = '#d1d5db'}>
+              About Us
+            </button>
+            <button style={linkButtonStyle} type="button" onMouseEnter={(e) => e.target.style.color = 'white'} onMouseLeave={(e) => e.target.style.color = '#d1d5db'}>
+              Privacy Policy
+            </button>
+            <button style={linkButtonStyle} type="button" onMouseEnter={(e) => e.target.style.color = 'white'} onMouseLeave={(e) => e.target.style.color = '#d1d5db'}>
+              Terms of Service
+            </button>
+            <button style={linkButtonStyle} type="button" onMouseEnter={(e) => e.target.style.color = 'white'} onMouseLeave={(e) => e.target.style.color = '#d1d5db'}>
+              Contact Support
+            </button>
           </div>
         </div>
         <div style={{ textAlign: 'center', marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #374151', fontSize: '0.8em' }}>
