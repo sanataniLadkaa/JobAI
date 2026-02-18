@@ -14,6 +14,9 @@ import ShortlistedCandidates from './components/ShortlistedCandidates';
 import ScheduledInterviews from './components/ScheduledInterviews';
 import SalaryEstimator from './components/SalaryEstimator';
 import Signup from './components/Signup'; // <--- IMPORT
+import ManageSlots from './components/ManageSlots';
+import BookSlot from './components/BookSlot';
+import MyInterviews from './components/MyInterviews'; // <--- IMPORT
 
 // Private Route Component
 const PrivateRoute = ({ children }) => {
@@ -99,6 +102,10 @@ function App() {
           <Route path="/" element={<RoleBasedRedirect />} />
 
           <Route path="/signup" element={<Signup />} />
+          <Route path="/manage-slots" element={<PrivateRoute><ManageSlots /></PrivateRoute>} />
+          <Route path="/book-slot" element={<PrivateRoute><BookSlot /></PrivateRoute>} />
+          <Route path="/my-interviews" element={<PrivateRoute><MyInterviews /></PrivateRoute>} /> {/* <--- ADD ROUTE */}
+
         </Routes>
       </Router>
     </AuthProvider>

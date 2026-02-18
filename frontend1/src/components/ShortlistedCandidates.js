@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../api';
 
 const ShortlistedCandidates = () => {
+  const [applications, setApplications] = useState([]);
   const [candidates, setCandidates] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -13,9 +14,8 @@ const ShortlistedCandidates = () => {
   useEffect(() => {
     const fetchShortlisted = async () => {
       try {
-        // We pass status as query param
         const res = await api.get('/api/applications?status=Shortlisted');
-        setCandidates(res.data);
+        setApplications(res.data);
       } catch (error) {
         console.error("Failed to fetch shortlisted candidates");
       }

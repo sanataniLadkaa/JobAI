@@ -1,6 +1,8 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import MyInterviews from './MyInterviews';
+ // <--- IMPORT
 
 const CandidateDashboard = () => {
   const { user, logout } = useAuth();
@@ -244,9 +246,21 @@ const CandidateDashboard = () => {
               </p>
             </div>
             <div style={{ marginTop: '25px', color: '#8b5cf6', fontWeight: '700', fontSize: '0.9em' }}>Check Value &rarr;</div>
+
+            
+          </div>
+
+
+          <div 
+            style={{ background: '#fff', padding: '20px', border: '1px solid #e5e7eb', borderRadius: '8px', cursor: 'pointer' }} 
+            onClick={() => navigate('/my-interviews')}
+          >
+            <h3 style={{ color: '#10b981', margin: '0 0 10px 0' }}>📅 My Interviews</h3>
+            <p style={{ color: '#6b7280', margin: 0 }}>View your scheduled interviews.</p>
           </div>
 
         </div>
+        
       </div>
 
       {/* Footer */}

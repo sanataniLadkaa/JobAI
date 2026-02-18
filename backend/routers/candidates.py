@@ -173,3 +173,64 @@ async def upload_resume(file: UploadFile = File(...), authorization: str = Heade
 def rag_search(query: str):
     summary = rag_service.search_and_summarize(query)
     return {"summary": summary}
+
+
+# ... existing imports ...
+
+# --- GET MY INTERVIEWS (Candidate Only) ---
+from fastapi import APIRouter, HTTPException, Header
+from pydantic import BaseModel
+from db import supabase
+
+router = APIRouter()
+
+@router.get("/my-interviews")
+def get_my_inters(authorization: str = Header(None)):
+    if not authorization:
+        raise HTTPException(401, header="Content-Type: application/json")
+
+    # Remove comments that might have been pasted inadvertently
+    token = authorization.replace("Bearer ", "")
+
+    # 1. Verify Session
+    sess_res = (
+        supabase
+        .table("sessions")
+        .select("*")
+        .eq("token", token)
+        .execute()
+    )
+    session = sess_res.data[0] if sess_res.data else None
+    if not session:
+        raise HTTPException(401)
+
+    # 2. Get User Data
+    user = (
+        supabase
+        .table("users")
+        .select("auth_id")
+        .eq("id", session["user_id"])
+        .execute()
+    )
+
+    if not user.data:
+        raise HTTPException(401)
+
+    candidate_auth_id = user.data[0]["auth_id"]
+
+    # 3. Fetch Slots
+    res = (
+        supabase
+        .table("interview_slots")
+        .select("""
+            *,
+            jobs!inner(title),
+            recruiter_id!inner(users!inner(name))
+        """)
+        .eq("candidate_auth_id", candidate_auth_id)
+        .eq("status", "booked")
+        .order("start_time", descending=True)
+        .execute()
+    )
+
+    return res.data
